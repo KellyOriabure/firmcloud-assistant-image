@@ -13,7 +13,8 @@ RUN apt-get update \
     && apt-get update \
     && apt-get install -y gh \
     && gh --version \
-    # Install Playwright Chromium browser for web automation
+    # Install Playwright properly then install Chromium browser
+    && npm install -g @playwright/test \
     && npx playwright install chromium \
-    # Clean up apt cache
-    && rm -rf /var/lib/apt/lists/*
+    # Clean up apt cache and npm cache
+    && rm -rf /var/lib/apt/lists/* /root/.npm
