@@ -38,8 +38,8 @@ services:
       - 'OPENCLAW_GATEWAY_BIND=${OPENCLAW_GATEWAY_BIND:-loopback}'
       - OPENCLAW_STATE_DIR=/data/.openclaw
       - OPENCLAW_WORKSPACE_DIR=/data/workspace
-      - 'BROWSER_CDP_URL=http://browser:9223'
-      - 'BROWSER_DEFAULT_PROFILE=${BROWSER_DEFAULT_PROFILE:-openclaw}'
+      - 'BROWSER_CDP_URL=http://browser:9222'
+      - 'BROWSER_DEFAULT_PROFILE=${BROWSER_DEFAULT_PROFILE:-remote}'
       - 'BROWSER_EVALUATE_ENABLED=${BROWSER_EVALUATE_ENABLED:-true}'
       - 'BROWSER_SNAPSHOT_MODE=${BROWSER_SNAPSHOT_MODE:-efficient}'
       - 'BROWSER_REMOTE_TIMEOUT_MS=${BROWSER_REMOTE_TIMEOUT_MS:-1500}'
@@ -56,6 +56,13 @@ services:
       - OPENCLAW_DOCKER_APT_PACKAGES=$OPENCLAW_DOCKER_APT_PACKAGES
     volumes:
       - 'openclaw-data:/data'
+      - /dev/shm:/dev/shm
+      - CHROME_CLI=--remote-debugging-port=9222 --no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-gpu
+    shm_size: 2g
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp:unconfined
     depends_on:
       browser:
         condition: service_healthy
@@ -77,7 +84,6 @@ services:
       - CHROME_CLI=--remote-debugging-port=9222
     volumes:
       - 'browser-data:/config'
-    shm_size: 2g
     healthcheck:
       test:
         - CMD-SHELL
