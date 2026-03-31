@@ -1,7 +1,6 @@
 services:
   openclaw:
     command: openclaw gateway
-    container_name: firmopenclaw
     build: .
     environment:
       - 'GITHUB_TOKEN=${GITHUB_TOKEN}'
@@ -104,7 +103,6 @@ services:
 
   paperclip:
     image: obehiaye/paperclip:latest
-    container_name: firmpaperclip
     environment:
       - NODE_ENV=production
       - HOST=0.0.0.0
